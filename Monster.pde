@@ -6,7 +6,6 @@ class Monster
   private String m_name, m_type;
   private float m_posX, m_posY;//we will use positions to place our sprite on the battlefield
   private PImage m_sprite;
-  Move[] m_moveset = new Move[0];
   
   
   Monster(int ID, int level, int HPIV, int attIV, int defIV, int spdIV, float posY, float posX)

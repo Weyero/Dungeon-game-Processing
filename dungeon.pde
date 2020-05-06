@@ -17,15 +17,22 @@ PFont font;
 
 
 //здесь будут перменные для монстров
-String[] monstList = {"PLAYER", "CHARMANDER", "SQUIRTLE", "PIDGEY", "RATTATA", "PIKACHU", "VULPIX"};//для потом массив с монстрами
+String[] monstList = {"PLAYER", "CHARMANDER", "SQUIRTLE", "PIDGEY", "RATTATA", "PIKACHU", "VULPIX"}; 
+// todo: добавить пикчи
+// todo: добавить названия монстров
 
 void setup()
 {
-
+	// сетап окна. Настройки графики. Функция выполняется один раз
   size(1000,700);
   frameRate(120);
   noSmooth();//пиксельное
-  overworldmapImg = loadImage("data/sprites/map.png");
+  overworldmapImg = loadImage("data/sprites/map.png"); // загружаем главную мапу
+  // Данж - 1, 2, 3 уровень и финальный босс. (карты)
+  stage1Img = loadImage("data/sprites/stage1.png");
+  stage2Img = loadImage("data/sprites/stage2.png");
+  stage3Img = loadImage("data/sprites/stage3.png");
+  stage4Img = loadImage("data/sprites/final.png");
   tileset01 = loadImage("sprites/spr_tileset01.png");//тайлсет
 
   font = createFont("data/pkmnrs.ttf", 14);
@@ -42,11 +49,11 @@ void setup()
 
 void draw()
   {
-    pushMatrix();
-    translate(width/2,height/2);//центр экрана
-    scale(owScaler);//зум
-    translate(player.getPosX()*-1-(tileSize/2),player.getPosY()*-1-(tileSize/2));//для того чтоб камера на центре была
-    drawOverworldmap(); 
+    pushMatrix();	// сохраняем текущую систему координат
+    translate(width/2,height/2);	//центр экрана
+    scale(owScaler);	//зум
+    translate(player.getPosX()*-1-(tileSize/2),player.getPosY()*-1-(tileSize/2));	//для того чтоб камера на центре была
+    drawOverworldmap(); // прорисовка карты 
     
     //тайлы
     noFill();
@@ -58,7 +65,7 @@ void draw()
       }
     }
    
-    player.display();//приросовка игрока
+    player.display();	// проросовка игрока
   
     popMatrix();
   
@@ -82,7 +89,6 @@ void drawOverworldmap()
 {
   image(overworldmapImg,0,0);
 }
-
 
 void keyPressed()
 {
