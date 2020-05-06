@@ -27,6 +27,40 @@ class Player
     m_checkTile = false;
     fill(255, 255, 255, 100);//white
 
+    m_speed = 0.5;
+
+    //  Если двигается, но дистанция < размера тайла
+    if (m_isMoving == true && m_distanceTravelled < tileSize)
+    {
+      if (m_direction == 0) m_posX += m_speed;
+      if (m_direction == 1) m_posY += m_speed;
+      if (m_direction == 2) m_posX -= m_speed;
+      if (m_direction == 3) m_posY -= m_speed;
+      m_distanceTravelled += m_speed;
+      m_checkTile = false;
+    }
+
+    // Если персонаж достиг следующего тайла, остановить
+    if (m_distanceTravelled >= tileSize)
+    {
+      m_isMoving = false;   // Больше не двигается
+      m_isRunning = false;
+      m_checkTile = true;
+      //println("step"); // test
+
+      m_distanceTravelled = 0;
+
+      // Смена спрайта для правой и левой ноги
+      if (m_spriteFrame == 0)
+      {
+        m_spriteFrame = 1;
+      }
+      else
+      {
+        m_spriteFrame = 0;
+      }
+    }
+
     //меняем спрайты
     handleSprite();
   }
@@ -51,9 +85,25 @@ class Player
   {
     return m_checkTile;
   }
+
+
+  // Movements:
+
+  void move(int direction)
+  {  
+    m_direction = direction;
+    m_isMoving = true;//we are now moving
+  }
   
+  boolean getIsMoving()
+  {
+    return m_isMoving;
+  }
   
- 
+  void setMoveState(boolean state)
+  {
+    m_isMoving = state;
+  }
 
   void setPosition(float x, float y)
   {
@@ -71,6 +121,39 @@ class Player
   {
     //m_sprite.width/spriteCount это ширина каждого сроайта  
     int m_frameNumber = 0;
+
+    // Смена спрайтов:
+    if (m_distanceTravelled < tileSize/2)
+    {
+      if(m_isRunning == false)//if the character is not running, show walking sprites
+      {
+        if (m_direction == 1) m_frameNumber = 0;
+        else if (m_direction == 0) m_frameNumber = (m_sprite.width/m_spriteCount)*6;
+        else if (m_direction == 2) m_frameNumber = (m_sprite.width/m_spriteCount)*9;
+        else if (m_direction == 3) m_frameNumber = (m_sprite.width/m_spriteCount)*3;
+      }
+     
+    }
+    //running sprites
+    if (m_distanceTravelled >= tileSize/2)
+    {
+      if (m_spriteFrame == 0 && m_isMoving == true)
+      {
+        if (m_direction == 1) m_frameNumber = (m_sprite.width/m_spriteCount)*1;
+        else if (m_direction == 0) m_frameNumber = (m_sprite.width/m_spriteCount)*7;
+        else if (m_direction == 2) m_frameNumber = (m_sprite.width/m_spriteCount)*10;
+        else if (m_direction == 3) m_frameNumber = (m_sprite.width/m_spriteCount)*4;
+      } 
+     
+      else if (m_spriteFrame == 1 && m_isMoving == true)
+      {
+        if (m_direction == 1) m_frameNumber = (m_sprite.width/m_spriteCount)*2;
+        else if (m_direction == 0) m_frameNumber = (m_sprite.width/m_spriteCount)*8;
+        else if (m_direction == 2) m_frameNumber = (m_sprite.width/m_spriteCount)*11;
+        else if (m_direction == 3) m_frameNumber = (m_sprite.width/m_spriteCount)*5;
+      }
+     
+    }
 
     //рисуем спрайт героя
     m_imgFrame = m_sprite.get(m_frameNumber,0,m_sprite.width/m_spriteCount, m_sprite.height);

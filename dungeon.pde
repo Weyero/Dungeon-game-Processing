@@ -12,7 +12,8 @@ float pPosX,pPosY;
 boolean pLeft, pRight, pDown, pUp;
 PImage pSprite;
 
-PImage overworldmapImg,tileset01;//карта
+PImage overworldmapImg;//карта
+PImage stage1Img, stage2Img, stage3Img, stage4Img;
 PFont font;
 
 
@@ -33,7 +34,6 @@ void setup()
   stage2Img = loadImage("data/sprites/stage2.png");
   stage3Img = loadImage("data/sprites/stage3.png");
   stage4Img = loadImage("data/sprites/final.png");
-  tileset01 = loadImage("sprites/spr_tileset01.png");//тайлсет
 
   font = createFont("data/pkmnrs.ttf", 14);
   textFont(font);
@@ -64,6 +64,14 @@ void draw()
         rect(i*tileSize,j*tileSize,tileSize,tileSize);
       }
     }
+
+    if(player.getIsMoving() == false)	// Если игрок перестал двигаться на данном тайле
+    {
+        if(pUp) checkCollision(3);
+        else if(pDown) checkCollision(1);      
+        else if(pLeft) checkCollision(2);	// Влево
+        else if(pRight) checkCollision(0);
+    } 
    
     player.display();	// проросовка игрока
   
@@ -88,6 +96,10 @@ void keyReleased()
 void drawOverworldmap()
 {
   image(overworldmapImg,0,0);
+  image(stage1Img,100*tileSize,0);
+  image(stage2Img,200*tileSize,0);
+  image(stage3Img,300*tileSize,0);
+  image(stage4Img,400*tileSize,0);
 }
 
 void keyPressed()
@@ -98,3 +110,21 @@ void keyPressed()
       if(keyCode == DOWN) pDown = true;
    
   }
+
+void checkCollision(int direction)
+{
+  boolean playerCollision = false;
+  // Столкновения
+  // TODO 
+  
+  if(playerCollision == false)
+  {
+    player.move(direction);
+    player.setMoveState(true);
+  }
+  else if(playerCollision == true)
+  {
+    player.setDirection(direction);
+    player.setMoveState(false);
+  }
+}
