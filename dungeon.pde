@@ -56,14 +56,14 @@ void setup()
 }
 void loadCollision()
 {
-  String[] loadFile = loadStrings("data/scripts/map01collision.txt");//load our textfile from the map editor program
-  String[] dissection = new String[0];//take the loaded file and for each index, we split it up and correctly use that data in the code below
+  String[] loadFile = loadStrings("data/scripts/map01collision.txt");
+  String[] dissection = new String[0];
   
   for(int i = 0; i<loadFile.length; ++i)
   {
-    dissection = split(loadFile[i], ",");//split each line of the saved file
-    //only append collision if the line starts with a "0" (using "1" for comments)
-    if(int(dissection[0]) == 0) blokje = (Collision[]) append(blokje, new Collision(float(dissection[1])*tileSize,float(dissection[2])*tileSize,tileSize));//create collision with the given data from the saveFile
+    dissection = split(loadFile[i], ",");
+    //только применять collison если в файле начинается с 0 "0" (1 для комментариев)
+    if(int(dissection[0]) == 0) blokje = (Collision[]) append(blokje, new Collision(float(dissection[1])*tileSize,float(dissection[2])*tileSize,tileSize));
   } 
 }
 void loadEntities()
