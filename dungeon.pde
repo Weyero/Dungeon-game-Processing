@@ -18,10 +18,6 @@ PImage pSprite;
 
 PImage overworldmapImg,tileset01;//карта
 PFont font;
-//NPC
-  npcSprite01 = loadImage("data/sprites/spr_npc01.png");
-  npcSprite02 = loadImage("data/sprites/spr_npc02.png");
-  npcSprite03 = loadImage("data/sprites/spr_npc03.png");
 
 //здесь будут перменные для монстров
 String[] monstList = {"PLAYER", "CHARMANDER", "SQUIRTLE", "PIDGEY", "RATTATA", "PIKACHU", "VULPIX"}; 
@@ -41,7 +37,10 @@ void setup()
   stage3Img = loadImage("data/sprites/stage3.png");
   stage4Img = loadImage("data/sprites/final.png");
   tileset01 = loadImage("sprites/spr_tileset01.png");//тайлсет
-
+//NPC
+  npcSprite01 = loadImage("data/sprites/spr_npc01.png");
+  npcSprite02 = loadImage("data/sprites/spr_npc02.png");
+  npcSprite03 = loadImage("data/sprites/spr_npc03.png");
   font = createFont("data/pkmnrs.ttf", 14);
   textFont(font);
     
