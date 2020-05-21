@@ -14,9 +14,8 @@ float owScaler = 3.0;
 //player variables
 float pPosX,pPosY;
 boolean pLeft, pRight, pDown, pUp;
-PImage pSprite;
-
-PImage overworldmapImg,tileset01;//карта
+PImage pSprite, npcSprite01, npcSprite02, npcSprite03;//спрайты персонажей
+PImage overworldmapImg,tileset01,stage1Img,stage2Img,stage3Img,stage4Img;//карта
 PFont font;
 
 //здесь будут перменные для монстров
