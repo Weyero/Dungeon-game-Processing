@@ -11,17 +11,31 @@ final int columns = 50;
 final int tileSize = 16;
 float owScaler = 3.0;
 
+// Для варпа, названия городов, проверка на conversation
+int currentArea; //used to know which area the player is in (town/route)
+int notificationTimer = 0;
+String[] areaName = {"TOWN", "DUNGEON"};
+boolean isInConversation = false;
+
 //player variables
 float pPosX,pPosY;
 boolean pLeft, pRight, pDown, pUp;
 PImage pSprite, npcSprite01, npcSprite02, npcSprite03;//спрайты персонажей
+PImage imgArrow, boxFrame01, boxFrame02, boxFrame03, boxFrame04, boxFrame05;// меню
 PImage overworldmapImg,tileset01,stage1Img,stage2Img,stage3Img,stage4Img;//карта
 PFont font;
+
+//warp var
+int blackoutEffectAlpha;//transparency
+boolean isTransitioning;
+int fadeAmount = 15;//strength
+float destinationX, destinationY;// координаты исчезания/появления
 
 //здесь будут перменные для монстров
 String[] monstList = {"PLAYER", "CHARMANDER", "SQUIRTLE", "PIDGEY", "RATTATA", "PIKACHU", "VULPIX"}; 
 // todo: добавить пикчи
 // todo: добавить названия монстров
+boolean isBattling = false;
 
 void setup()
 {
@@ -36,6 +50,14 @@ void setup()
   stage3Img = loadImage("data/sprites/stage3.png");
   stage4Img = loadImage("data/sprites/final.png");
   tileset01 = loadImage("sprites/spr_tileset01.png");//тайлсет
+
+//menu stuff
+  boxFrame01 = loadImage("data/sprites/boxFrame01.png");
+  boxFrame02 = loadImage("data/sprites/boxFrame02.png");//box used in conversations
+  boxFrame03 = loadImage("data/sprites/boxFrame03.png");//player overview
+  boxFrame04 = loadImage("data/sprites/boxFrame04.png");
+  boxFrame05 = loadImage("data/sprites/boxFrame05.png");
+
 //NPC
   npcSprite01 = loadImage("data/sprites/spr_npc01.png");
   npcSprite02 = loadImage("data/sprites/spr_npc02.png");
@@ -52,6 +74,7 @@ void setup()
  loadCollision();
    loadEntities();
 }
+
 void loadCollision()
 {
   String[] loadFile = loadStrings("data/scripts/map01collision.txt");
@@ -64,6 +87,7 @@ void loadCollision()
     if(int(dissection[0]) == 0) blokje = (Collision[]) append(blokje, new Collision(float(dissection[1])*tileSize,float(dissection[2])*tileSize,tileSize));
   } 
 }
+
 void loadEntities()
 {  
   //map01entities.txt: ID, posX, posY, object type
@@ -102,7 +126,7 @@ void draw()
         rect(i*tileSize,j*tileSize,tileSize,tileSize);
       }
     }
-         if(player.getIsMoving() == false)//if the player stopped moving during this frame
+         if(player.getIsMoving() == false)//
       {
         if(pUp) checkCollision(3);
         else if(pDown) checkCollision(1);      
@@ -113,12 +137,15 @@ void draw()
     player.display();	// проросовка игрока
   
     popMatrix();
+
+    handleTransitions();
   
     fill(0);
     textSize(24);
     textAlign(LEFT);
     textLeading(30);
 
+    blackoutEffect();
   }
 
 void keyReleased()
@@ -133,6 +160,10 @@ void keyReleased()
 void drawOverworldmap()
 {
   image(overworldmapImg,0,0);
+  image(stage1Img,100*tileSize,0); // 1 данж (+100 по x)
+  image(stage2Img,200*tileSize,0); // 2
+  image(stage3Img,300*tileSize,0); // 3
+  image(stage4Img,400*tileSize,0); // финальный
 }
 
 void keyPressed()
@@ -141,7 +172,12 @@ void keyPressed()
       if(keyCode == RIGHT) pRight = true;
       if(keyCode == UP) pUp = true;
       if(keyCode == DOWN) pDown = true;
-   
+    
+    if(key == 'x') //A button on Gameboy
+      {
+        checkPlayerInteraction();
+        checkWarp();//check if we're standing in front of a door 
+      }
   }
   void checkCollision(int direction)
 {
@@ -149,7 +185,7 @@ void keyPressed()
   //collision with walls
   for (int i = 0; i<blokje.length; ++i)
   {
-    if (blokje[i].checkCollision(player.getPosX(), player.getPosY(), direction))//check if the player was about to move into an obstacle (collision)
+    if (blokje[i].checkCollision(player.getPosX(), player.getPosY(), direction))//collision
     {
       playerCollision = true;
     }
@@ -157,9 +193,9 @@ void keyPressed()
   //collision with objects
   for (int i = 0; i<map01obj.length; ++i)
   {
-    if (map01obj[i].checkCollision(player.getPosX(), player.getPosY(), direction))//check if the player was about to move into an obstacle (collision)
+    if (map01obj[i].checkCollision(player.getPosX(), player.getPosY(), direction))// чек на колижн
     {
-      playerCollision = true;//there was a collision
+      playerCollision = true; // колижн
     }
   }  
   
@@ -175,3 +211,102 @@ void keyPressed()
   }
 }
 
+// *** ВАРП ПЕРСОНАЖА НА ДРУГИЕ ЛОКАЦИИ *** \\
+// чек варп, анимация затемнения, проверки
+
+void blackoutEffect()
+{
+  noStroke();
+  fill(0,0,0,blackoutEffectAlpha); // черный
+  
+  if(isTransitioning)
+  {
+    rect(0,0,width,height);
+    blackoutEffectAlpha += fadeAmount;
+    
+    if(blackoutEffectAlpha >= 255) 
+    {
+      fadeAmount *= -1;// Максимум угасает - начинает появляться
+      player.setPosition(destinationX,destinationY);
+    }
+    if(blackoutEffectAlpha <= 0)// Если достигли 0, перемещение окончено (затемнение)
+    {
+      blackoutEffectAlpha = 0;
+      fadeAmount = 15;
+      isTransitioning = false;
+    }
+  }
+}
+
+void textMessage(float posX, float posY, String text, color c)
+{
+    fill(125);
+    text(text, posX+1, posY+1);
+    fill(c);
+    text(text, posX, posY);
+}
+
+void handleTransitions()
+{
+  for(int i = 0; i<mapTransitions.length; ++i)
+  {
+    if(player.getPosX() == mapTransitions[i].getPosX() && player.getPosY() == mapTransitions[i].getPosY() && currentArea != mapTransitions[i].getNPCType())
+    {
+      notificationTimer = 360;
+      currentArea = mapTransitions[i].getNPCType();// карта на которой находится
+    }
+  }
+  
+  if(notificationTimer > 0)
+  {
+    textAlign(CENTER);
+    image(boxFrame02, width/2-boxFrame02.width/2, height*0.05);//background box
+    textSize(48);
+    textMessage(width/2, height*0.15, areaName[currentArea], color(40));// смена названия территории на которой находится
+    notificationTimer--;
+  }  
+}
+
+void checkWarp()
+{
+  for(int i = 0; i<warpTiles.length; ++i)
+  {
+    //если игрок стоит перед тайлом с варпом и смотрит на него, портнуть игрока
+    if((player.getPosX() == warpTiles[i].getPosX() && player.getPosY() == warpTiles[i].getPosY()+(1*tileSize) && player.getDirection() == 3) || (player.getPosX() == warpTiles[i].getPosX() && player.getPosY() == warpTiles[i].getPosY()-(1*tileSize) && player.getDirection() == 1))
+    {
+      if(warpTiles[i].getNPCType() == 0)
+      {
+        destinationX = warpTiles[i+1].getPosX();
+        destinationY = warpTiles[i+1].getPosY()-(1*tileSize);
+        isTransitioning = true;
+      }
+      else if(warpTiles[i].getNPCType() == 1)
+      {
+        destinationX = warpTiles[i-1].getPosX();
+        destinationY = warpTiles[i-1].getPosY()+(1*tileSize);
+        isTransitioning = true;
+      }
+    }
+  }
+}
+
+void checkPlayerInteraction()
+{
+  for (int i = 0; i<map01obj.length; ++i)
+  {
+    if (map01obj[i].checkCollision(player.getPosX(), player.getPosY(), player.getDirection())) // проверка на колижн
+    {
+      isInConversation = true;//we are now talking to the target NPC
+      
+      
+        if(i== 0)
+      {
+        destinationX = player.getPosX();  // перемещение персонажа
+            destinationY = player.getPosY();
+            isTransitioning = true;
+            //player.healAllmonstr();
+            println("healed.");
+      }
+    }
+  }
+}
