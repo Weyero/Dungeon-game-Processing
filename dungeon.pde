@@ -103,7 +103,14 @@ void draw()
         rect(i*tileSize,j*tileSize,tileSize,tileSize);
       }
     }
-   
+         if(player.getIsMoving() == false)//if the player stopped moving during this frame
+      {
+        if(pUp) checkCollision(3);
+        else if(pDown) checkCollision(1);      
+        else if(pLeft) checkCollision(2);//move the player to the left
+        else if(pRight) checkCollision(0);
+
+      }   
     player.display();	// проросовка игрока
   
     popMatrix();
