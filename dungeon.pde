@@ -14,14 +14,9 @@ float owScaler = 3.0;
 //player variables
 float pPosX,pPosY;
 boolean pLeft, pRight, pDown, pUp;
-PImage pSprite;
-
-PImage overworldmapImg,tileset01;//карта
+PImage pSprite, npcSprite01, npcSprite02, npcSprite03;//спрайты персонажей
+PImage overworldmapImg,tileset01,stage1Img,stage2Img,stage3Img,stage4Img;//карта
 PFont font;
-//NPC
-  npcSprite01 = loadImage("data/sprites/spr_npc01.png");
-  npcSprite02 = loadImage("data/sprites/spr_npc02.png");
-  npcSprite03 = loadImage("data/sprites/spr_npc03.png");
 
 //здесь будут перменные для монстров
 String[] monstList = {"PLAYER", "CHARMANDER", "SQUIRTLE", "PIDGEY", "RATTATA", "PIKACHU", "VULPIX"}; 
@@ -41,7 +36,10 @@ void setup()
   stage3Img = loadImage("data/sprites/stage3.png");
   stage4Img = loadImage("data/sprites/final.png");
   tileset01 = loadImage("sprites/spr_tileset01.png");//тайлсет
-
+//NPC
+  npcSprite01 = loadImage("data/sprites/spr_npc01.png");
+  npcSprite02 = loadImage("data/sprites/spr_npc02.png");
+  npcSprite03 = loadImage("data/sprites/spr_npc03.png");
   font = createFont("data/pkmnrs.ttf", 14);
   textFont(font);
     
@@ -104,7 +102,14 @@ void draw()
         rect(i*tileSize,j*tileSize,tileSize,tileSize);
       }
     }
-   
+         if(player.getIsMoving() == false)//if the player stopped moving during this frame
+      {
+        if(pUp) checkCollision(3);
+        else if(pDown) checkCollision(1);      
+        else if(pLeft) checkCollision(2);//move the player to the left
+        else if(pRight) checkCollision(0);
+
+      }   
     player.display();	// проросовка игрока
   
     popMatrix();
