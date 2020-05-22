@@ -143,6 +143,21 @@ void move(int direction)
     m_monsterTeam = new Monster[0];
     m_monsterTeam = importData;
   }
+  
+   void reduceMonsterHP(int amount)
+  {
+    m_monsterTeam[0].reduceHP(amount);
+    m_monsterTeam[1].reduceHP(amount);
+    m_monsterTeam[2].reduceHP(amount);
+  }
+   void healAllmonstr()
+  {
+      m_monsterTeam[0].setHP(m_monsterTeam[0].getMonsterMaxHP());//set the HP of each pokemon from the player's team to its max HP
+    
+  }
+  
+  
+  
   void handleSprite()
   {
     //m_sprite.width/spriteCount ширина каждоого спрайта
