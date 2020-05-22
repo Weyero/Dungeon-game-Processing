@@ -152,7 +152,7 @@ void move(int direction)
   }
    void healAllmonstr()
   {
-      m_monsterTeam[0].setHP(m_monsterTeam[0].getMonsterMaxHP());//set the HP of each pokemon from the player's team to its max HP
+      m_monsterTeam[0].setHP(m_monsterTeam[0].getMonsterMaxHP());
     
   }
   
