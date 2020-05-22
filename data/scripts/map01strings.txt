@@ -1,0 +1,8 @@
+0/Welcome to the Shop.
+1/Удивительно как ты остался жив!
+1/PREPARE TO DIE!
+2/Hi,I am Dmitriy.
+2/Nice to see you.
+3/Hello! Let me take care of your.
+4/This is a pond.NEWLINEPlease do not feed the fish.
+5/PLAYER's house.
