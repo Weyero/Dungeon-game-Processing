@@ -1,4 +1,3 @@
-
 class Move
 {
   int m_damage, m_accuracy;

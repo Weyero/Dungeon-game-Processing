@@ -110,7 +110,7 @@ PImage loadedBackImg = loadImage("data/sprites/spr_monstrback0.png");//спра�
   //для перса
   pSprite = loadImage("sprites/spr_player01.png");
   Monster[] testPlayerTeam = new Monster[1];
-  int playerStarterMonster = int(monstList[0]);//это для боевки потом
+  int playerStarterMonster = int(monstrList[0]);//это для боевки потом
   testPlayerTeam[0] = new Monster(playerStarterMonster, 5, int(random(10,20)), int(random(3,10)), int(random(3,10)), int(random(3,10)), 0, 0); // для боевки
   player = new Player(tileSize*5,tileSize*7, pSprite, testPlayerTeam);
   

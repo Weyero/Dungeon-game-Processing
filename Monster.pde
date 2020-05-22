@@ -6,6 +6,8 @@ class Monster
   private String m_name, m_type;
   private float m_posX, m_posY;//координаты спрайта вовремя боя
   private PImage m_sprite;
+
+  Move[] m_moveset = new Move[0];
   
   
   Monster(int ID, int level, int HPIV, int attIV, int defIV, int spdIV, float posY, float posX)
@@ -26,7 +28,7 @@ class Monster
     m_spd = m_lvl*spdIV;
     m_currentHP = m_maxHP;//фулл хп
     
-    m_name = monstList[ID];//название монстра берем из массива
+    m_name = monstrList[ID];//название монстра берем из массива
     m_ID = ID;
   
      
