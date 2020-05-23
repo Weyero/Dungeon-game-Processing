@@ -81,6 +81,13 @@ void setup()
   stage4Img = loadImage("data/sprites/final.png");
   tileset01 = loadImage("sprites/spr_tileset01.png");//тайлсет
 
+  // initialize the array
+  for (int i=0; i<2; i++) {
+    soundFile[i] = new SoundFile (this, "song"+i+".mp3");
+  }
+  soundFile[1].amp(0.3);
+  soundFile[1].loop();
+
 //menu stuff
   boxFrame01 = loadImage("data/sprites/boxFrame01.png");
   boxFrame02 = loadImage("data/sprites/boxFrame02.png");//box used in conversations
@@ -88,7 +95,7 @@ void setup()
   boxFrame04 = loadImage("data/sprites/boxFrame04.png");
   boxFrame05 = loadImage("data/sprites/boxFrame05.png");
   imgArrow = loadImage("data/sprites/imgArrow.png");
-    font = createFont("data/pkmnrs.ttf", 14);
+    font = createFont("data/pkmrs.ttf", 14);
   textFont(font);
   //спрайты для монстров
 PImage loadedBackImg = loadImage("data/sprites/spr_monstrback0.png");//спрайт для героя
@@ -188,7 +195,7 @@ void draw()
 
     if(isInConversation == true) 
     {
-      conversationHandler(1);
+      conversationHandler(1);  // (1 - сообщения для батла)
     }
     else
     {
@@ -308,7 +315,7 @@ void draw()
     textSize(24);
     textAlign(LEFT);
     textLeading(30);
-    if(owMenu == -1 || owMenuOpened == false) textMessage(10, 30, "Z or W = бег\nX = взаимодействие\nEnter = открыть и закрыть меню\nArrow keys = ходьба\nR = сбросить позицию на начальную\nP = загрузка сохранения", color(255));
+    if(owMenu == -1 || owMenuOpened == false) textMessage(10, 30, "X = взаимодействие\nEnter = открыть и закрыть меню\nArrow keys = ходьба\nR = сбросить позицию на начальную\nP = загрузка сохранения", color(255));
     
     if(isInConversation == true) conversationHandler(0);
   
@@ -504,10 +511,28 @@ void keyPressed()
       if(key == 'z' || key == 'w') owMenu = -1; 
     }
    
-    else if(owMenu == 2 && owMenuOpened == true)//сохранение todo
+    else if(owMenu == 2 && owMenuOpened == true)
     {
-      //здесь сохранение сделать
-      
+      if(key == 'z' || key == 'w') owMenu = -1; // Назад
+      if(keyCode == DOWN) submenuOption = 0;// Нет
+      if(keyCode == UP) submenuOption = 1;// Да
+      if(key == 'x' && submenuOption == 0) owMenu = -1;//submenuOption дефолт = 0
+      if(key == 'x' && submenuOption == 1)// сохранить игру
+      {
+        String[] savefile = new String[0];
+        savefile = append(savefile, str(player.getPosX()));// Х - позиция
+        savefile = append(savefile, str(player.getPosY()));// Y - позиция
+        savefile = append(savefile, str(width));
+        savefile = append(savefile, str(height));
+        savefile = append(savefile, str(player.getItemCount(0))); /* сохраняет инвентарь */
+        savefile = append(savefile, str(player.getItemCount(1))); /* сохраняет инвентарь */
+        savefile = append(savefile, str(pBattlesWon));
+       
+        saveStrings("savegame01.txt", savefile);
+        
+        owMenu = -1;//return to main overworld menu
+        owMenuOpened = false;//turn the main overworld menu off
+        menuOption = 0;//reset back to top option 
     }
    
     
@@ -517,6 +542,7 @@ void keyPressed()
         owMenu = -1;
     }
   }
+}
 }
 void keyReleased()
 {
@@ -590,6 +616,10 @@ void drawOverworldmap()
   image(stage2Img,200*tileSize,0); // 2
   image(stage3Img,300*tileSize,0); // 3
   image(stage4Img,400*tileSize,0); // финальный
+
+  // Music
+  soundFile[currentArea].amp(0.3);
+  soundFile[currentArea].loop();
 }
 
   void checkCollision(int direction)
