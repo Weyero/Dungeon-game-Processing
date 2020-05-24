@@ -227,7 +227,6 @@ void draw()
       {
         textMessage(width/2,height*0.75+10,"FIGHT", color(200,0,0));//бой text
         textMessage(width/2-boxFrame05.width*0.75,height*0.85+10,"BAG", color(0,0,200));//сумка text
-        textMessage(width/2+boxFrame05.width*0.75,height*0.85+10,"RUN", color(0,50,0));//выход из боя text
       }
         
       //выбор (красным выделение)
@@ -356,7 +355,6 @@ void keyPressed()
       {
         if(battleOption == 0) fightMenu = true;
         if(battleOption == 1) bagMenu = true;
-        if(battleOption == 2) isBattling = false;//выход из боя
         battleOption = 0;//устанавливаем изначально на первую опцию
       }
      
