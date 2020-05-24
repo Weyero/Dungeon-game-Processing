@@ -88,6 +88,7 @@ void setup()
   soundFile[1].amp(0.3);
   soundFile[1].loop();
 
+
 //menu stuff
   boxFrame01 = loadImage("data/sprites/boxFrame01.png");
   boxFrame02 = loadImage("data/sprites/boxFrame02.png");//box used in conversations
@@ -95,7 +96,9 @@ void setup()
   boxFrame04 = loadImage("data/sprites/boxFrame04.png");
   boxFrame05 = loadImage("data/sprites/boxFrame05.png");
   imgArrow = loadImage("data/sprites/imgArrow.png");
+
     font = createFont("data/pkmrs.ttf", 14);
+
   textFont(font);
   //спрайты для монстров
 PImage loadedBackImg = loadImage("data/sprites/spr_monstrback0.png");//спрайт для героя
@@ -117,7 +120,9 @@ PImage loadedBackImg = loadImage("data/sprites/spr_monstrback0.png");//спра�
   //для перса
   pSprite = loadImage("sprites/spr_player01.png");
   Monster[] testPlayerTeam = new Monster[1];
+
   int playerStarterMonster = int(monstrList[0]);//это для боевки потом
+
   testPlayerTeam[0] = new Monster(playerStarterMonster, 5, int(random(10,20)), int(random(3,10)), int(random(3,10)), int(random(3,10)), 0, 0); // для боевки
   player = new Player(tileSize*5,tileSize*7, pSprite, testPlayerTeam);
   
@@ -173,7 +178,9 @@ void draw()
   if(isBattling)//рисуем боевку
   {
     image(battleBackground01,0,0);
+
     soundFile[currentArea].stop();
+
     imageMode(CENTER);
     textAlign(CENTER);
     rectMode(CENTER);
@@ -195,7 +202,10 @@ void draw()
 
     if(isInConversation == true) 
     {
+
       conversationHandler(1);  // (1 - сообщения для батла)
+
+
     }
     else
     {
@@ -227,6 +237,7 @@ void draw()
       {
         textMessage(width/2,height*0.75+10,"FIGHT", color(200,0,0));//бой text
         textMessage(width/2-boxFrame05.width*0.75,height*0.85+10,"BAG", color(0,0,200));//сумка text
+
       }
         
       //выбор (красным выделение)
@@ -314,7 +325,9 @@ void draw()
     textSize(24);
     textAlign(LEFT);
     textLeading(30);
+
     if(owMenu == -1 || owMenuOpened == false) textMessage(10, 30, "X = взаимодействие\nEnter = открыть и закрыть меню\nArrow keys = ходьба\nR = сбросить позицию на начальную\nP = загрузка сохранения", color(255));
+
     
     if(isInConversation == true) conversationHandler(0);
   
@@ -355,6 +368,7 @@ void keyPressed()
       {
         if(battleOption == 0) fightMenu = true;
         if(battleOption == 1) bagMenu = true;
+
         battleOption = 0;//устанавливаем изначально на первую опцию
       }
      
@@ -509,6 +523,7 @@ void keyPressed()
       if(key == 'z' || key == 'w') owMenu = -1; 
     }
    
+
     else if(owMenu == 2 && owMenuOpened == true)
     {
       if(key == 'z' || key == 'w') owMenu = -1; // Назад
@@ -531,6 +546,7 @@ void keyPressed()
         owMenu = -1;//return to main overworld menu
         owMenuOpened = false;//turn the main overworld menu off
         menuOption = 0;//reset back to top option 
+
     }
    
     
@@ -541,7 +557,9 @@ void keyPressed()
     }
   }
 }
+
 }
+
 void keyReleased()
 {
   if(keyCode == LEFT) pLeft = false;
@@ -618,6 +636,7 @@ void drawOverworldmap()
   // Music
   soundFile[currentArea].amp(0.3);
   soundFile[currentArea].loop();
+
 }
 
   void checkCollision(int direction)
@@ -822,7 +841,9 @@ void checkPlayerInteraction()
       println("Character ID: "+i);//печатаем ID перса с которым разговариваем
       if(i== 1)//если разговор пошел с боссом то начинается бой с ним
       {
+
         opposingmonstr = new Monster(9, 10, 20, int(random(7,10)), int(random(8,10)), int(random(7,10)), 0, 0);
+
           isBattling = true;
           player.setMoveState(false);
       }
