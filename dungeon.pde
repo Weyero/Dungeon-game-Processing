@@ -173,7 +173,7 @@ void draw()
   if(isBattling)//рисуем боевку
   {
     image(battleBackground01,0,0);
-    
+    soundFile[currentArea].stop();
     imageMode(CENTER);
     textAlign(CENTER);
     rectMode(CENTER);
@@ -824,7 +824,7 @@ void checkPlayerInteraction()
       println("Character ID: "+i);//печатаем ID перса с которым разговариваем
       if(i== 1)//если разговор пошел с боссом то начинается бой с ним
       {
-        opposingmonstr = new Monster(9, int(random(2,5)), int(random(10,20)), int(random(3,10)), int(random(3,10)), int(random(3,10)), 0, 0);
+        opposingmonstr = new Monster(9, 10, 20, int(random(7,10)), int(random(8,10)), int(random(7,10)), 0, 0);
           isBattling = true;
           player.setMoveState(false);
       }
