@@ -594,7 +594,7 @@ void displayOWMenu()
     imageMode(CORNER);
     color c = color(40);
     textLeading(30);
-    textMessage(width/2-boxFrame03.width/2+20, height/2-boxFrame03.height/2+40,"\nPOTIONS x"+ player.getItemCount(0), c);//сколько зелья у нас находится
+    textMessage(width/2-boxFrame03.width/2+20, height/2-boxFrame03.height/2+40,"\nPOTIONS x"+ player.getItemCount(1), c);//сколько зелья у нас находится
   }
   if(owMenu == 1)//игрок
   {
@@ -847,7 +847,7 @@ void checkPlayerInteraction()
 	   if(i== 6)//даем персонаже доп.зелья
       {
         if(itemcounter ==0){
-            player.setItemCount(0, player.getItemCount(0)+5);
+            player.setItemCount(1, player.getItemCount(1)+5);
             itemcounter++;
       }
       }
