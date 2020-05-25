@@ -854,8 +854,8 @@ void checkPlayerInteraction()
 	  
       if(i== 1)//если разговор пошел с боссом то начинается бой с ним
       {
-
         opposingmonstr = new Monster(9, 10, 15, int(random(6,8)), int(random(8,10)), int(random(7,10)), 0, 0);
+
 
           isBattling = true;
           player.setMoveState(false);
