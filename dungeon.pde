@@ -41,7 +41,7 @@ int owMenu = -1;
 int menuOption, submenuOption;
 int owMenu5option1 = 1;//позиция начала в меню
 boolean healmonstr;//хилим персонажа если он умер
-
+int itemcounter=0;
 //warp var
 int blackoutEffectAlpha;//transparency
 boolean isTransitioning;
@@ -813,6 +813,11 @@ void checkPlayerInteraction()
 {
   for (int i = 0; i<map01obj.length; ++i)
   {
+  if(i==6&&itemcounter ==1)
+    {
+      println("dead");
+    }
+    else{
     if (map01obj[i].checkCollision(player.getPosX(), player.getPosY(), player.getDirection()))//коллижн с объектом
     {
       //меняем направление спрайта npc
@@ -839,10 +844,18 @@ void checkPlayerInteraction()
         conversation[k] = conversation[k].replaceAll("NEWLINE", "\n");
       }
       println("Character ID: "+i);//печатаем ID перса с которым разговариваем
+	   if(i== 6)//даем персонаже доп.зелья
+      {
+        if(itemcounter ==0){
+            player.setItemCount(0, player.getItemCount(0)+5);
+            itemcounter++;
+      }
+      }
+	  
       if(i== 1)//если разговор пошел с боссом то начинается бой с ним
       {
+        opposingmonstr = new Monster(9, 10, 15, int(random(6,8)), int(random(8,10)), int(random(7,10)), 0, 0);
 
-        opposingmonstr = new Monster(9, 10, 20, int(random(7,10)), int(random(8,10)), int(random(7,10)), 0, 0);
 
           isBattling = true;
           player.setMoveState(false);
@@ -856,6 +869,7 @@ void checkPlayerInteraction()
             println("healed.");
       }
     }
+  }
   }
 }
 
